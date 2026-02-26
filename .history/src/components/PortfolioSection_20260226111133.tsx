@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { buildWhatsAppLink, whatsappMessages } from "@/lib/whatsapp";
 import { ArrowRight } from "lucide-react";
@@ -29,6 +29,14 @@ const PortfolioSection = () => {
           <h2 className="section-heading">Projects That Speak For Themselves</h2>
         </div>
 
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {filters.map((f) => (
+            <button
+              key={f}
+              onClick={() => setActiveFilter(f)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors min-h-[40px] ${
+                activeFilter === f
+                  ? "bg-primary text-primary-foreground"
         {/* Filters - Improved mobile UI */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -68,38 +76,6 @@ const PortfolioSection = () => {
                 alt={item.title}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 loading="lazy"
-                width={800}
-                height={item.orientation === "portrait" ? 1000 : 600}
-              />
-              
-              {/* Overlay with gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
-              {/* Content Container */}
-              <div className="absolute inset-0 flex flex-col justify-between p-4 md:p-5">
-                {/* Category Badge */}
-                <div className="flex justify-start">
-                  <span className="text-xs uppercase tracking-widest text-primary font-bold bg-background/90 backdrop-blur-sm px-3 py-1 rounded-full inline-block">
-                    {item.category}
-                  </span>
-                </div>
-
-                {/* Bottom Content */}
-                <div className="translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="text-foreground font-heading font-bold text-sm md:text-base mb-2">{item.title}</h3>
-                  <a
-                    href={`/project/${item.id}`}
-                    className="inline-flex items-center gap-2 text-primary hover:text-accent-hover font-semibold text-xs md:text-sm transition-colors"
-                  >
-                    Learn More
-                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
         {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -118,7 +94,31 @@ const PortfolioSection = () => {
             Get Started Today <ArrowRight size={18} />
           </a>
         </motion.div>
-      </div>
+      </div="absolute left-2 md:left-6 text-foreground p-2 min-w-[48px] min-h-[48px]"
+              aria-label="Previous"
+            >
+              <ChevronLeft size={32} />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); navigate(1); }}
+              className="absolute right-2 md:right-6 text-foreground p-2 min-w-[48px] min-h-[48px]"
+              aria-label="Next"
+            >
+              <ChevronRight size={32} />
+            </button>
+            <motion.img
+              key={lightboxIndex}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              src={filtered[lightboxIndex].img}
+              alt={filtered[lightboxIndex].title}
+              className="max-w-full max-h-[80vh] object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

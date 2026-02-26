@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { buildWhatsAppLink, whatsappMessages } from "@/lib/whatsapp";
 import { ArrowRight } from "lucide-react";
@@ -29,6 +29,14 @@ const PortfolioSection = () => {
           <h2 className="section-heading">Projects That Speak For Themselves</h2>
         </div>
 
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {filters.map((f) => (
+            <button
+              key={f}
+              onClick={() => setActiveFilter(f)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors min-h-[40px] ${
+                activeFilter === f
+                  ? "bg-primary text-primary-foreground"
         {/* Filters - Improved mobile UI */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -93,32 +101,57 @@ const PortfolioSection = () => {
                   >
                     Learn More
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3 }}
-          className="text-center bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-xl p-6 md:p-8"
-        >
-          <h3 className="font-heading font-bold text-lg md:text-xl mb-2">Have a Similar Project?</h3>
-          <p className="text-foreground/80 mb-6 text-sm md:text-base">Let's turn your vision into reality with our professional aluminum solutions.</p>
-          <a
+                  </a
             href={buildWhatsAppLink(whatsappMessages.similar)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 md:px-8 py-3 rounded-full hover:bg-accent-hover transition-all font-semibold text-sm md:text-base"
+            className="inline-flex items-center gap-2 text-primary hover:text-accent-hover transition-colors font-semibold"
           >
-            Get Started Today <ArrowRight size={18} />
+            Have a Similar Project? → Let's Talk on WhatsApp
           </a>
-        </motion.div>
+        </div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-background/95 flex items-center justify-center p-4"
+            onClick={closeLightbox}
+          >
+            <button onClick={closeLightbox} className="absolute top-4 right-4 text-foreground p-2 min-w-[48px] min-h-[48px]" aria-label="Close">
+              <X size={28} />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); navigate(-1); }}
+              className="absolute left-2 md:left-6 text-foreground p-2 min-w-[48px] min-h-[48px]"
+              aria-label="Previous"
+            >
+              <ChevronLeft size={32} />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); navigate(1); }}
+              className="absolute right-2 md:right-6 text-foreground p-2 min-w-[48px] min-h-[48px]"
+              aria-label="Next"
+            >
+              <ChevronRight size={32} />
+            </button>
+            <motion.img
+              key={lightboxIndex}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              src={filtered[lightboxIndex].img}
+              alt={filtered[lightboxIndex].title}
+              className="max-w-full max-h-[80vh] object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
