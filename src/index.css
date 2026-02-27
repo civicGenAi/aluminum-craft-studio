@@ -161,6 +161,42 @@
     background-size: 200% 200%;
     animation: gradient-shift 6s ease infinite;
   }
+
+  /* Marquee animations for testimonials */
+  .marquee-row {
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 1rem;
+    width: max-content;
+  }
+
+  @keyframes marquee-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-33.333%); }
+  }
+
+  @keyframes marquee-right {
+    0% { transform: translateX(-33.333%); }
+    100% { transform: translateX(0); }
+  }
+
+  .animate-marquee-left {
+    animation: marquee-left 40s linear infinite;
+  }
+  .animate-marquee-left:hover {
+    animation-play-state: paused;
+  }
+
+  .animate-marquee-right {
+    animation: marquee-right 45s linear infinite;
+  }
+  .animate-marquee-right:hover {
+    animation-play-state: paused;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
